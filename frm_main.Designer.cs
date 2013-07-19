@@ -52,18 +52,18 @@
 			this.btn_brs = new System.Windows.Forms.Button();
 			this.fbd1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.grp_counter = new System.Windows.Forms.GroupBox();
-			this.chk_use_counter = new System.Windows.Forms.CheckBox();
-			this.lbl_start = new System.Windows.Forms.Label();
-			this.lbl_end = new System.Windows.Forms.Label();
-			this.nud_start = new System.Windows.Forms.NumericUpDown();
-			this.nud_end = new System.Windows.Forms.NumericUpDown();
 			this.txt_counter_help = new System.Windows.Forms.TextBox();
+			this.nud_end = new System.Windows.Forms.NumericUpDown();
+			this.nud_start = new System.Windows.Forms.NumericUpDown();
+			this.lbl_end = new System.Windows.Forms.Label();
+			this.lbl_start = new System.Windows.Forms.Label();
+			this.chk_use_counter = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudsleep)).BeginInit();
 			this.grp_conflicts.SuspendLayout();
 			this.grp_patches.SuspendLayout();
 			this.grp_counter.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nud_start)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_end)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nud_start)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// txt_url
@@ -72,7 +72,7 @@
 			this.txt_url.Name = "txt_url";
 			this.txt_url.Size = new System.Drawing.Size(259, 20);
 			this.txt_url.TabIndex = 0;
-			this.txt_url.Text = "http://2ch.hk/b/";
+			this.txt_url.Text = "http://z.falsetrue.net/lol.php";
 			// 
 			// lbl_url
 			// 
@@ -107,7 +107,7 @@
 			this.txt_path.Name = "txt_path";
 			this.txt_path.Size = new System.Drawing.Size(223, 20);
 			this.txt_path.TabIndex = 5;
-			this.txt_path.Text = "F:\\IMGS\\HOLOCOS";
+			this.txt_path.Text = "B:\\z.falsetrue.net";
 			// 
 			// btn_go
 			// 
@@ -122,6 +122,8 @@
 			// checkBox1
 			// 
 			this.checkBox1.AutoSize = true;
+			this.checkBox1.Checked = true;
+			this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.checkBox1.Location = new System.Drawing.Point(16, 213);
 			this.checkBox1.Name = "checkBox1";
 			this.checkBox1.Size = new System.Drawing.Size(133, 17);
@@ -245,7 +247,6 @@
 			// chk_vocaroo
 			// 
 			this.chk_vocaroo.AutoSize = true;
-			this.chk_vocaroo.Enabled = false;
 			this.chk_vocaroo.Location = new System.Drawing.Point(408, 33);
 			this.chk_vocaroo.Name = "chk_vocaroo";
 			this.chk_vocaroo.Size = new System.Drawing.Size(66, 17);
@@ -300,46 +301,17 @@
 			this.grp_counter.TabStop = false;
 			this.grp_counter.Text = "Counter";
 			// 
-			// chk_use_counter
+			// txt_counter_help
 			// 
-			this.chk_use_counter.AutoSize = true;
-			this.chk_use_counter.Location = new System.Drawing.Point(541, 30);
-			this.chk_use_counter.Name = "chk_use_counter";
-			this.chk_use_counter.Size = new System.Drawing.Size(84, 17);
-			this.chk_use_counter.TabIndex = 0;
-			this.chk_use_counter.Text = "Use counter";
-			this.chk_use_counter.UseVisualStyleBackColor = true;
-			this.chk_use_counter.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
-			// 
-			// lbl_start
-			// 
-			this.lbl_start.AutoSize = true;
-			this.lbl_start.Location = new System.Drawing.Point(6, 38);
-			this.lbl_start.Name = "lbl_start";
-			this.lbl_start.Size = new System.Drawing.Size(29, 13);
-			this.lbl_start.TabIndex = 1;
-			this.lbl_start.Text = "Start";
-			// 
-			// lbl_end
-			// 
-			this.lbl_end.AutoSize = true;
-			this.lbl_end.Location = new System.Drawing.Point(9, 112);
-			this.lbl_end.Name = "lbl_end";
-			this.lbl_end.Size = new System.Drawing.Size(26, 13);
-			this.lbl_end.TabIndex = 2;
-			this.lbl_end.Text = "End";
-			// 
-			// nud_start
-			// 
-			this.nud_start.Location = new System.Drawing.Point(9, 68);
-			this.nud_start.Maximum = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-			this.nud_start.Name = "nud_start";
-			this.nud_start.Size = new System.Drawing.Size(154, 20);
-			this.nud_start.TabIndex = 4;
+			this.txt_counter_help.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.txt_counter_help.Location = new System.Drawing.Point(9, 182);
+			this.txt_counter_help.Multiline = true;
+			this.txt_counter_help.Name = "txt_counter_help";
+			this.txt_counter_help.ReadOnly = true;
+			this.txt_counter_help.Size = new System.Drawing.Size(154, 160);
+			this.txt_counter_help.TabIndex = 6;
+			this.txt_counter_help.Text = "Counter can be used to download files from different pages. {0} in url will be re" +
+    "placed with counter value\r\n";
 			// 
 			// nud_end
 			// 
@@ -353,19 +325,48 @@
 			this.nud_end.Size = new System.Drawing.Size(154, 20);
 			this.nud_end.TabIndex = 5;
 			// 
-			// txt_counter_help
+			// nud_start
 			// 
-			this.txt_counter_help.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.txt_counter_help.Location = new System.Drawing.Point(9, 182);
-			this.txt_counter_help.Multiline = true;
-			this.txt_counter_help.Name = "txt_counter_help";
-			this.txt_counter_help.ReadOnly = true;
-			this.txt_counter_help.Size = new System.Drawing.Size(154, 160);
-			this.txt_counter_help.TabIndex = 6;
-			this.txt_counter_help.Text = "Counter can be used to download files from different pages. {0} in url will be re" +
-    "placed with counter value\r\n";
+			this.nud_start.Location = new System.Drawing.Point(9, 68);
+			this.nud_start.Maximum = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+			this.nud_start.Name = "nud_start";
+			this.nud_start.Size = new System.Drawing.Size(154, 20);
+			this.nud_start.TabIndex = 4;
 			// 
-			// Form1
+			// lbl_end
+			// 
+			this.lbl_end.AutoSize = true;
+			this.lbl_end.Location = new System.Drawing.Point(9, 112);
+			this.lbl_end.Name = "lbl_end";
+			this.lbl_end.Size = new System.Drawing.Size(26, 13);
+			this.lbl_end.TabIndex = 2;
+			this.lbl_end.Text = "End";
+			// 
+			// lbl_start
+			// 
+			this.lbl_start.AutoSize = true;
+			this.lbl_start.Location = new System.Drawing.Point(6, 38);
+			this.lbl_start.Name = "lbl_start";
+			this.lbl_start.Size = new System.Drawing.Size(29, 13);
+			this.lbl_start.TabIndex = 1;
+			this.lbl_start.Text = "Start";
+			// 
+			// chk_use_counter
+			// 
+			this.chk_use_counter.AutoSize = true;
+			this.chk_use_counter.Location = new System.Drawing.Point(541, 30);
+			this.chk_use_counter.Name = "chk_use_counter";
+			this.chk_use_counter.Size = new System.Drawing.Size(84, 17);
+			this.chk_use_counter.TabIndex = 0;
+			this.chk_use_counter.Text = "Use counter";
+			this.chk_use_counter.UseVisualStyleBackColor = true;
+			this.chk_use_counter.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+			// 
+			// frm_main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -389,7 +390,7 @@
 			this.Controls.Add(this.txt_url);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "Form1";
+			this.Name = "frm_main";
 			this.Text = "Regex Downloader";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
 			((System.ComponentModel.ISupportInitialize)(this.nudsleep)).EndInit();
@@ -399,8 +400,8 @@
 			this.grp_patches.PerformLayout();
 			this.grp_counter.ResumeLayout(false);
 			this.grp_counter.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nud_start)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_end)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nud_start)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

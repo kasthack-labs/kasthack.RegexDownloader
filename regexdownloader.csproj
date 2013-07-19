@@ -37,8 +37,9 @@
     <ApplicationIcon>icon-download.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EpicMorg.Net.AdvancedDownloadManager">
-      <HintPath>..\..\..\ACTIVE_DEVELOPMENT\EMVAG\EpicMorg.Net.AdvancedDownloadManager\bin\Debug\EpicMorg.Net.AdvancedDownloadManager.dll</HintPath>
+    <Reference Include="EpicMorg.Net.AdvancedDownloadManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AdvancedWebClient\bin\Debug\EpicMorg.Net.AdvancedDownloadManager.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
