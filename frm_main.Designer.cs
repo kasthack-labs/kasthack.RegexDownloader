@@ -35,7 +35,7 @@
 			this.lbl_path = new System.Windows.Forms.Label();
 			this.txt_path = new System.Windows.Forms.TextBox();
 			this.btn_go = new System.Windows.Forms.Button();
-			this.checkBox1 = new System.Windows.Forms.CheckBox();
+			this.chk_relative_path = new System.Windows.Forms.CheckBox();
 			this.chksleep = new System.Windows.Forms.CheckBox();
 			this.nudsleep = new System.Windows.Forms.NumericUpDown();
 			this.grp_conflicts = new System.Windows.Forms.GroupBox();
@@ -58,6 +58,7 @@
 			this.lbl_end = new System.Windows.Forms.Label();
 			this.lbl_start = new System.Windows.Forms.Label();
 			this.chk_use_counter = new System.Windows.Forms.CheckBox();
+			this.chk_counter_dwnld = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudsleep)).BeginInit();
 			this.grp_conflicts.SuspendLayout();
 			this.grp_patches.SuspendLayout();
@@ -119,17 +120,17 @@
 			this.btn_go.UseVisualStyleBackColor = true;
 			this.btn_go.Click += new System.EventHandler(this.button1_Click);
 			// 
-			// checkBox1
+			// chk_relative_path
 			// 
-			this.checkBox1.AutoSize = true;
-			this.checkBox1.Checked = true;
-			this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.checkBox1.Location = new System.Drawing.Point(16, 213);
-			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(133, 17);
-			this.checkBox1.TabIndex = 7;
-			this.checkBox1.Text = "Relative path for regex";
-			this.checkBox1.UseVisualStyleBackColor = true;
+			this.chk_relative_path.AutoSize = true;
+			this.chk_relative_path.Checked = true;
+			this.chk_relative_path.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chk_relative_path.Location = new System.Drawing.Point(16, 213);
+			this.chk_relative_path.Name = "chk_relative_path";
+			this.chk_relative_path.Size = new System.Drawing.Size(133, 17);
+			this.chk_relative_path.TabIndex = 7;
+			this.chk_relative_path.Text = "Relative path for regex";
+			this.chk_relative_path.UseVisualStyleBackColor = true;
 			// 
 			// chksleep
 			// 
@@ -289,6 +290,7 @@
 			// 
 			// grp_counter
 			// 
+			this.grp_counter.Controls.Add(this.chk_counter_dwnld);
 			this.grp_counter.Controls.Add(this.txt_counter_help);
 			this.grp_counter.Controls.Add(this.nud_end);
 			this.grp_counter.Controls.Add(this.nud_start);
@@ -327,7 +329,7 @@
 			// 
 			// nud_start
 			// 
-			this.nud_start.Location = new System.Drawing.Point(9, 68);
+			this.nud_start.Location = new System.Drawing.Point(9, 82);
 			this.nud_start.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -340,7 +342,7 @@
 			// lbl_end
 			// 
 			this.lbl_end.AutoSize = true;
-			this.lbl_end.Location = new System.Drawing.Point(9, 112);
+			this.lbl_end.Location = new System.Drawing.Point(9, 117);
 			this.lbl_end.Name = "lbl_end";
 			this.lbl_end.Size = new System.Drawing.Size(26, 13);
 			this.lbl_end.TabIndex = 2;
@@ -349,7 +351,7 @@
 			// lbl_start
 			// 
 			this.lbl_start.AutoSize = true;
-			this.lbl_start.Location = new System.Drawing.Point(6, 38);
+			this.lbl_start.Location = new System.Drawing.Point(6, 53);
 			this.lbl_start.Name = "lbl_start";
 			this.lbl_start.Size = new System.Drawing.Size(29, 13);
 			this.lbl_start.TabIndex = 1;
@@ -366,6 +368,16 @@
 			this.chk_use_counter.UseVisualStyleBackColor = true;
 			this.chk_use_counter.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
 			// 
+			// chk_counter_dwnld
+			// 
+			this.chk_counter_dwnld.Location = new System.Drawing.Point(6, 19);
+			this.chk_counter_dwnld.Name = "chk_counter_dwnld";
+			this.chk_counter_dwnld.Size = new System.Drawing.Size(157, 31);
+			this.chk_counter_dwnld.TabIndex = 7;
+			this.chk_counter_dwnld.Text = "Just download pages with indexes";
+			this.chk_counter_dwnld.UseVisualStyleBackColor = true;
+			this.chk_counter_dwnld.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged_1);
+			// 
 			// frm_main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -381,7 +393,7 @@
 			this.Controls.Add(this.grp_conflicts);
 			this.Controls.Add(this.nudsleep);
 			this.Controls.Add(this.chksleep);
-			this.Controls.Add(this.checkBox1);
+			this.Controls.Add(this.chk_relative_path);
 			this.Controls.Add(this.btn_go);
 			this.Controls.Add(this.txt_path);
 			this.Controls.Add(this.lbl_path);
@@ -415,7 +427,7 @@
         private System.Windows.Forms.Label lbl_path;
         private System.Windows.Forms.TextBox txt_path;
         private System.Windows.Forms.Button btn_go;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chk_relative_path;
         private System.Windows.Forms.CheckBox chksleep;
         private System.Windows.Forms.NumericUpDown nudsleep;
         private System.Windows.Forms.GroupBox grp_conflicts;
@@ -438,6 +450,7 @@
 				private System.Windows.Forms.Label lbl_end;
 				private System.Windows.Forms.Label lbl_start;
 				private System.Windows.Forms.CheckBox chk_use_counter;
+				private System.Windows.Forms.CheckBox chk_counter_dwnld;
     }
 }
 

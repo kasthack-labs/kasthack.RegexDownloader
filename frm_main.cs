@@ -31,7 +31,7 @@ namespace regexdownloader {
 		private void bwdl_DoWork( object sender, System.ComponentModel.DoWorkEventArgs e ) {
 			try {
 				#region Vars
-				bool skip_existing = true, sleep_between = false, autorename = false, relative = false, use_counter = false, rghost_p = false, vocaroo_p = false;
+				bool skip_existing = true, sleep_between = false, autorename = false, relative = false, use_counter = false, rghost_p = false, vocaroo_p = false, just_dwnld_counter = false;
 				int sleep_time = 0, counter_start = 0, counter_end = 0;
 				List<string> targets = new List<string>();
 				Random rnd = new Random();
@@ -51,9 +51,10 @@ namespace regexdownloader {
 					btn_go.Text = "Loading..";
 					counter_end = Convert.ToInt32( nud_end.Value );
 					counter_start = Convert.ToInt32( nud_start.Value );
+					just_dwnld_counter = chk_counter_dwnld.Checked;
 					o = txt_path.Text;
 					r = new Regex( cmb_regex.Text );
-					relative = checkBox1.Checked;
+					relative = chk_relative_path.Checked;
 					rghost_p = chk_rghost.Checked;
 					skip_existing = rdskip.Checked;
 					sleep_between = chksleep.Checked;
@@ -71,32 +72,53 @@ namespace regexdownloader {
 				}
 				baseuri = new Uri( use_counter ? String.Format( baseuri_s, 0 ) : baseuri_s );
 				protocol = baseuri.Scheme + ":";
-				#region Counter
-				input = use_counter ?
-					String.Concat(
-						Enumerable.Range(
-							counter_start,
-							counter_end - counter_start + 1
+				if ( use_counter && just_dwnld_counter ) {
+					targets = Enumerable.Range(
+						counter_start,
+						counter_end - counter_start + 1
 						).
-						Select( a =>
-							AdvancedWebClient.
-								DownloadString(
-									String.Format(
-										baseuri_s,
-										a
-									)
-								)
-						)
-					)
-					: AdvancedWebClient.DownloadString( baseuri.ToString() );
-				#endregion
-				targets.AddRange( ( from Match v in r.Matches( input ) select v.Value ).Select( a => a.StartsWith( "//" ) ? protocol + a : a ).ToArray() );
-				#region Patches
-				if ( rghost_p )
-					targets = targets.Select( a => rghost_link.IsMatch( a ) ? rghost.Match( AdvancedWebClient.DownloadString( a ) ).Value : a ).Where( b => b.Length > 0 ).ToList();
-				if ( vocaroo_p )
-					targets = targets.Select( a => vocaroo_link.IsMatch( a ) ? vocaroo.Match( AdvancedWebClient.DownloadString( a ) ).Value : a ).ToList();
-				#endregion
+										 Select( a => string.Format( baseuri_s, a ) ).ToList();
+				}
+				else {
+					#region Counter
+
+					input = use_counter
+								? String.Concat(
+									Enumerable.Range(
+										counter_start,
+										counter_end - counter_start + 1
+										).
+											   Select( a =>
+													  AdvancedWebClient.
+														  DownloadString(
+															  String.Format(
+																  baseuri_s,
+																  a
+																  )
+														  )
+										)
+									  )
+								: AdvancedWebClient.DownloadString( baseuri.ToString() );
+
+					#endregion
+
+					targets.AddRange(
+						( from Match v in r.Matches( input ) select v.Value ).Select( a => a.StartsWith( "//" ) ? protocol + a : a ).ToArray() );
+
+					#region Patches
+
+					if ( rghost_p )
+						targets =
+							targets.Select( a => rghost_link.IsMatch( a ) ? rghost.Match( AdvancedWebClient.DownloadString( a ) ).Value : a )
+								   .Where( b => b.Length > 0 )
+								   .ToList();
+					if ( vocaroo_p )
+						targets =
+							targets.Select( a => vocaroo_link.IsMatch( a ) ? vocaroo.Match( AdvancedWebClient.DownloadString( a ) ).Value : a )
+								   .ToList();
+
+					#endregion
+				}
 				#region Download
 				targets = targets.Distinct().ToList();
 				this.Invoke( ( Action ) ( () => this.lbl_dl.Text = "0/" + targets.Count ) );
@@ -125,14 +147,14 @@ namespace regexdownloader {
 			}
 			catch { }
 				#endregion
-				this.Invoke( ( Action ) ( () => {
-					Application.DoEvents();
-					prg_dl.Value = 100;
-					prg_dl.Enabled = false;
-					btn_go.Text = "GO!";
-					btn_go.Enabled = true;
-					MessageBox.Show( "Finished" );
-				} ) );
+			this.Invoke( ( Action ) ( () => {
+				Application.DoEvents();
+				prg_dl.Value = 100;
+				prg_dl.Enabled = false;
+				btn_go.Text = "GO!";
+				btn_go.Enabled = true;
+				MessageBox.Show( "Finished" );
+			} ) );
 		}
 
 		private void btn_brs_Click( object sender, EventArgs e ) {
@@ -142,6 +164,10 @@ namespace regexdownloader {
 
 		private void checkBox2_CheckedChanged( object sender, EventArgs e ) {
 			grp_counter.Enabled = chk_use_counter.Checked;
+		}
+
+		private void checkBox2_CheckedChanged_1( object sender, EventArgs e ) {
+			cmb_regex.Enabled = !chk_counter_dwnld.Checked;
 		}
 	}
 }
