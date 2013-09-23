@@ -51,6 +51,6 @@ namespace regexdownloader
         [UsedImplicitly]
         internal bool VocarooPatch = false;
 
-        internal Action<ProgressInfo> ReportProgres;
+        internal Action<ProgressInfo> ReportProgress;
     }
 }
