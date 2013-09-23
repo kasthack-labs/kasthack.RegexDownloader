@@ -1,91 +1,21 @@
-﻿using System.Diagnostics;
-using System.Net;
-using System.Threading.Tasks;
-using EpicMorg.Net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
-using regexdownloader.Properties;
+using System.Threading.Tasks;
+using EpicMorg.Net;
 
-namespace regexdownloader {
-    public partial class FrmMain : Form {
-        readonly Regex _rghostLink = new Regex( "http://rghost.ru/[0-9]+" );
-        readonly Regex _vocarooLink = new Regex( "http://vocaroo.com/i/[a-zA-Z0-9]+" );
-        readonly Regex _vocarooTarget = new Regex( "/media_command.php?media=[a-zA-Z0-9]+&command=download_mp3" );
-        readonly Regex _rghostTarget = new Regex( @"http://rghost.ru/download/[0-9]+/[0-9a-z]+/[A-Za-z0-9\.%]+" );
-        readonly Random _rnd = new Random();
+namespace RegexDownloader {
+    public static class Downloader {
+        private static readonly Regex RghostLink = new Regex( "http://rghost.ru/[0-9]+" );
+        private static readonly Regex VocarooLink = new Regex( "http://vocaroo.com/i/[a-zA-Z0-9]+" );
+        private static readonly Regex VocarooTarget = new Regex( "/media_command.php?media=[a-zA-Z0-9]+&command=download_mp3" );
+        private static readonly Regex RghostTarget = new Regex( @"http://rghost.ru/download/[0-9]+/[0-9a-z]+/[A-Za-z0-9\.%]+" );
 
-        public FrmMain() { InitializeComponent(); }
-        private void BtnGoClick( object sender, EventArgs e ) { this.BwDwn.RunWorkerAsync(); }
-        private void Form1_FormClosed( object sender, FormClosedEventArgs e ) { }
-        private void btn_brs_Click( object sender, EventArgs e ) {
-            if ( FbdBrs.ShowDialog() == DialogResult.OK )
-                this.TxtSavePath.Text = FbdBrs.SelectedPath;
-        }
-        private void btnRunExplorer_Click( object sender, EventArgs e ) {
-            try {
-                Process.Start( TxtSavePath.Text );
-            }
-            catch { }
-        }
-        private void ChkCounterEnabled_CheckedChanged( object sender, EventArgs e ) {
-            GrpCounter.Enabled = ChkCounterEnabled.Checked;
-        }
-        private void RdDwnPagesonly_CheckedChanged( object sender, EventArgs e ) { CmbRegex.Enabled = RdDwnAslist.Checked; }
-
-        private void bwdl_DoWork( object sender, System.ComponentModel.DoWorkEventArgs e ) {
-            DownloadSettings settings = null;
-            this.Invoke( (Action) ( () => {
-                settings = new DownloadSettings() {
-                    AutoRename = RdConflictAutorename.Checked,
-                    Url = TxtDwnUrl.Text,
-                    CounterEnd = Convert.ToInt32( NudCounterEnd.Value ),
-                    CounterStart = Convert.ToInt32( NudCounterStart.Value ),
-                    OutputDir = TxtSavePath.Text,
-                    Relative = ChkRegexRelativePath.Checked,
-                    RghostPatch = ChkPatchRghost.Checked,
-                    SkipExisting = RdConflictSkip.Checked,
-                    SleepBetween = ChkRequestSleep.Checked,
-                    SleepTime = Convert.ToInt32( NudRequsetSleep.Value ),
-                    UrlRegex = new Regex( CmbRegex.Text ),
-                    UseCounter = ChkCounterEnabled.Checked,
-                    VocarooPatch = ChkPatchVocaroo.Checked,
-                    ReportProgress = ( a ) => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) )
-                };
-                if ( RdConflictAutorename.Checked )
-                    settings.ConflictAction = ConflictAction.Autorename;
-                else if ( RdConflictOverwrite.Checked )
-                    settings.ConflictAction = ConflictAction.Overwrite;
-                else if ( RdConflictSkip.Checked )
-                    settings.ConflictAction = ConflictAction.Skip;
-                else settings.ConflictAction = ConflictAction.Unknown;
-
-                if ( RdDwnAslist.Checked )
-                    settings.DwnType = DownloadType.List;
-                else if ( RdDwnMatches.Checked )
-                    settings.DwnType = DownloadType.Mathces;
-                else if ( RdDwnPagesonly.Checked )
-                    settings.DwnType = DownloadType.CounterOnly;
-                else if ( RDDwnAsRecList.Checked )
-                    settings.DwnType = DownloadType.MatchesList;
-                else settings.DwnType = DownloadType.Unknown;
-            } ) );
-            Download( settings );
-            this.Invoke( (Action) ( () => {
-                Application.DoEvents();
-                PrgDwn.Value = 100;
-                PrgDwn.Enabled = false;
-                BtnDwnRun.Text = Resources.FrmMain_bwdl_DoWork_GO_;
-                BtnDwnRun.Enabled = true;
-                MessageBox.Show( Resources.FrmMain_bwdl_DoWork_Finished );
-            } ) );
-        }
-
-        private void Download( DownloadSettings settings ) {
+        public static void Download( DownloadSettings settings ) {
             try {
                 IEnumerable<string> pagesToParse = null;
                 var targetList = new List<string>();
@@ -116,17 +46,17 @@ namespace regexdownloader {
                 #endregion
 
                 #region Url patches
-                Func<string, Regex, Regex, string> genPatch = (a, r1, r2) => {
-                    if ( !r1.IsMatch(a) )
+                Func<string, Regex, Regex, string> genPatch = ( a, r1, r2 ) => {
+                    if ( !r1.IsMatch( a ) )
                         return a;
                     return r2.Match(
-                        AdvancedWebClient
-                            .DownloadString(a)
-                    )
-                    .Value;
+                                    AdvancedWebClient
+                                        .DownloadString( a )
+                        )
+                             .Value;
                 };
-                Func<string, string> vocarooPatch = (a) => genPatch(a, this._vocarooLink, this._vocarooTarget);
-                Func<string, string> rghostPatch = (a) => genPatch(a, this._rghostLink, this._rghostTarget);
+                Func<string, string> vocarooPatch = ( a ) => genPatch( a, VocarooLink, VocarooTarget );
+                Func<string, string> rghostPatch = ( a ) => genPatch( a, RghostLink, RghostTarget );
                 #endregion
 
                 switch ( settings.DwnType ) {
@@ -209,16 +139,16 @@ namespace regexdownloader {
                 #region Patches
                 if ( settings.VocarooPatch )
                     targetList = targetList
-                            .AsParallel()
-                            .Select(vocarooPatch)
-                            .Distinct()
-                            .ToList();
+                        .AsParallel()
+                        .Select( vocarooPatch )
+                        .Distinct()
+                        .ToList();
                 if ( settings.RghostPatch )
                     targetList = targetList
-                            .AsParallel()
-                            .Select( rghostPatch )
-                            .Distinct()
-                            .ToList();
+                        .AsParallel()
+                        .Select( rghostPatch )
+                        .Distinct()
+                        .ToList();
                 #endregion
                 var reportInfo = new ProgressInfo { Ready = 0, Total = targetList.Count };
 
@@ -237,7 +167,7 @@ namespace regexdownloader {
                              a => a.Host
                     );
                 #endregion
-                
+
                 Parallel.ForEach( targetList2, new ParallelOptions { MaxDegreeOfParallelism = 16 }, uris => {
                     Parallel.ForEach( uris, new ParallelOptions { MaxDegreeOfParallelism = settings.SleepBetween ? 1 : 4 }, s => {
                         var output = Path.Combine( settings.OutputDir, Path.GetFileName( s.ToString() ) );
@@ -248,8 +178,8 @@ namespace regexdownloader {
                                 case ConflictAction.Autorename:
                                     output = Path.Combine(
                                                           Path.GetDirectoryName( output ),
-                                                          Path.GetFileNameWithoutExtension( output ) +
-                                                          this._rnd.Next( int.MaxValue ) +
+                                                          settings.RenameOnConflictFunc(Path.GetFileNameWithoutExtension( output ))+
+                                                          ////this._rnd.Next( int.MaxValue ) +
                                                           Path.GetExtension( output ) );
                                     break;
                             }
@@ -269,11 +199,5 @@ namespace regexdownloader {
             }
             catch { }
         }
-
-        private void ReportProgress( ProgressInfo progressInfo ) {
-            if ( progressInfo.Total > 0 )
-                this.PrgDwn.Value = ( progressInfo.Ready + progressInfo.Error ) / progressInfo.Total;
-        }
-
     }
 }

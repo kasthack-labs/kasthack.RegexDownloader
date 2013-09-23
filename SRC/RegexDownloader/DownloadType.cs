@@ -1,5 +1,5 @@
-﻿namespace regexdownloader {
-    internal enum DownloadType {
+﻿namespace RegexDownloader {
+    public enum DownloadType {
         Mathces,
         List,
         CounterOnly,
