@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using regexdownloader;
 using RegexDownloader;
-using RegexDownloaderGUI.Properties;
 
 namespace RegexDownloaderGUI {
     public partial class FrmMain : Form {
         readonly Random _rnd = new Random();
-
+        private bool _isDownloadRunning;
         public FrmMain() { this.InitializeComponent(); }
-        private void BtnGoClick( object sender, EventArgs e ) { this.BwDwn.RunWorkerAsync(); }
+
+        private void BtnGoClick(object sender,
+                                EventArgs e) {
+
+            if (!this._isDownloadRunning)
+                this.BwDwn.RunWorkerAsync();
+            else {
+                this.BwDwn.CancelAsync();
+            }
+            this._isDownloadRunning ^= true;
+        }
         private void Form1_FormClosed( object sender, FormClosedEventArgs e ) { }
         private void btn_brs_Click( object sender, EventArgs e ) {
             if ( this.FbdBrs.ShowDialog() == DialogResult.OK )
@@ -31,8 +40,25 @@ namespace RegexDownloaderGUI {
         private void bwdl_DoWork( object sender, System.ComponentModel.DoWorkEventArgs e ) {
             DownloadSettings settings = null;
             this.Invoke( (Action) ( () => {
-                settings = new DownloadSettings() {
+                this._isDownloadRunning = true;
+                this.GrpDownload.Enabled = true;
+                this.GrpInput.Enabled = true;
+                this.BtnDwnRun.Text = @"Cancel";
+                Application.DoEvents();
+            } ));
+            this.Invoke( (Action) ( () => {
+                settings = new DownloadSettings {
                     AutoRename = this.RdConflictAutorename.Checked,
+                    RenameOnConflictFunc =
+                        a=>
+                            Path.Combine(
+                                Path.GetDirectoryName(a),
+                                Path.GetFileNameWithoutExtension(a)+
+                                    "."+
+                                    this._rnd.Next()+
+                                    Path.GetExtension(a)
+                            ),
+                    CancelFunc=()=>e.Cancel,
                     Url = this.TxtDwnUrl.Text,
                     CounterEnd = Convert.ToInt32( this.NudCounterEnd.Value ),
                     CounterStart = Convert.ToInt32( this.NudCounterStart.Value ),
@@ -44,8 +70,8 @@ namespace RegexDownloaderGUI {
                     UrlRegex = new Regex( this.CmbRegex.Text ),
                     UseCounter = this.ChkCounterEnabled.Checked,
                     VocarooPatch = this.ChkPatchVocaroo.Checked,
-                    ReportProgress = ( a ) => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) ),
-
+                    ReportProgress = a => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) ),
+                    ThreadCount = Convert.ToInt32(this.NudParallelDownloads.Value)
                 };
                 if ( this.RdConflictAutorename.Checked )
                     settings.ConflictAction = ConflictAction.Autorename;
@@ -67,19 +93,30 @@ namespace RegexDownloaderGUI {
             } ) );
             Downloader.Download( settings );
             this.Invoke( (Action) ( () => {
-                Application.DoEvents();
+                this._isDownloadRunning = false;
+                this.GrpDownload.Enabled = true;
+                this.GrpInput.Enabled = true;
                 this.PrgDwn.Value = 100;
-                this.PrgDwn.Enabled = false;
                 this.BtnDwnRun.Text = @"GO";
-                this.BtnDwnRun.Enabled = true;
                 MessageBox.Show( @"Finished" );
             } ) );
         }
 
         
         private void ReportProgress( ProgressInfo progressInfo ) {
-            if ( progressInfo.Total > 0 )
-                this.PrgDwn.Value = ( progressInfo.Ready + progressInfo.Error ) / progressInfo.Total;
+            if ( progressInfo.Total <= 0 ) return;
+            this.PrgDwn.Value = ( progressInfo.Ready + progressInfo.Error ) / progressInfo.Total;
+            this.LblDwnStat.Text = string.Format(
+                "{0} complete/{1} failed/{2} total",
+                progressInfo.Ready,
+                progressInfo.Error,
+                progressInfo.Total
+            );
+            Application.DoEvents();
+        }
+
+        private void ChkRequestSleep_CheckedChanged( object sender, EventArgs e ) {
+            this.NudRequsetSleep.Enabled = this.ChkRequestSleep.Checked;
         }
 
     }

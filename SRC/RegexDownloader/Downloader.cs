@@ -26,7 +26,7 @@ namespace RegexDownloader {
 
                 #region Counter
 
-                Func<string, IEnumerable<string>> cntr = ( b ) => Enumerable
+                Func<string, IEnumerable<string>> cntr = b => Enumerable
                     .Range(
                            settings.CounterStart,
                            settings.CounterEnd - settings.CounterStart + 1
@@ -55,9 +55,11 @@ namespace RegexDownloader {
                         )
                              .Value;
                 };
-                Func<string, string> vocarooPatch = ( a ) => genPatch( a, VocarooLink, VocarooTarget );
-                Func<string, string> rghostPatch = ( a ) => genPatch( a, RghostLink, RghostTarget );
+                Func<string, string> vocarooPatch = a => genPatch( a, VocarooLink, VocarooTarget );
+                Func<string, string> rghostPatch = a => genPatch( a, RghostLink, RghostTarget );
                 #endregion
+
+                if ( settings.CancelFunc() ) return;
 
                 switch ( settings.DwnType ) {
                     #region Matches on page
@@ -119,6 +121,7 @@ namespace RegexDownloader {
                 }
                 #region Get all targets
 
+                if ( settings.CancelFunc() ) return;
                 if ( pagesToParse != null ) {
                     var toParse = pagesToParse as string[] ?? pagesToParse.ToArray();
                     var tmpq = toParse
@@ -134,7 +137,8 @@ namespace RegexDownloader {
                         .ToList()
                         ;
                 }
-
+                if ( settings.CancelFunc() ) return;
+                
                 #endregion
                 #region Patches
                 if ( settings.VocarooPatch )
@@ -165,25 +169,34 @@ namespace RegexDownloader {
                     .Where( a => !( a == null ) )
                     .GroupBy(
                              a => a.Host
-                    );
+                    )
+                    .Select(
+                        a=>a.ToArray()
+                    )
+                    .ToArray()
+                    ;
+                if ( settings.CancelFunc() ) return;
                 #endregion
-
+                
                 Parallel.ForEach( targetList2, new ParallelOptions { MaxDegreeOfParallelism = 16 }, uris => {
-                    Parallel.ForEach( uris, new ParallelOptions { MaxDegreeOfParallelism = settings.SleepBetween ? 1 : 4 }, s => {
-                        var output = Path.Combine( settings.OutputDir, Path.GetFileName( s.ToString() ) );
-                        if ( File.Exists( output ) )
-                            switch ( settings.ConflictAction ) {
-                                case ConflictAction.Skip:
-                                    return;
-                                case ConflictAction.Autorename:
-                                    output = Path.Combine(
-                                                          Path.GetDirectoryName( output ),
-                                                          settings.RenameOnConflictFunc(Path.GetFileNameWithoutExtension( output ))+
-                                                          ////this._rnd.Next( int.MaxValue ) +
-                                                          Path.GetExtension( output ) );
-                                    break;
-                            }
+                    if ( settings.CancelFunc() ) return;
+                    Parallel.ForEach( uris, new ParallelOptions { MaxDegreeOfParallelism = settings.SleepBetween ? 1 : settings.ThreadCount }, s => {
+                        if ( settings.CancelFunc() ) return;
                         try {
+                            var output = Path.Combine( settings.OutputDir, Path.GetFileName( s.ToString() ) );
+                            if ( File.Exists( output ) )
+                                switch ( settings.ConflictAction ) {
+                                    case ConflictAction.Skip:
+                                        reportInfo.Ready++;
+                                        return;
+                                    case ConflictAction.Autorename:
+                                        output = Path.Combine(
+                                                              Path.GetDirectoryName( output ),
+                                                              settings.RenameOnConflictFunc(Path.GetFileNameWithoutExtension( output ))+
+                                                              ////this._rnd.Next( int.MaxValue ) +
+                                                              Path.GetExtension( output ) );
+                                        break;
+                                }
                             AdvancedWebClient.DownloadFile( s.ToString(), output );
                             reportInfo.Ready++;
                         }

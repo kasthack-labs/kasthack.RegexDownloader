@@ -54,6 +54,7 @@
             this.LblCounterEnd = new System.Windows.Forms.Label();
             this.LblCounterStart = new System.Windows.Forms.Label();
             this.GrpInput = new System.Windows.Forms.GroupBox();
+            this.RDDwnAsRecList = new System.Windows.Forms.RadioButton();
             this.RdDwnAslist = new System.Windows.Forms.RadioButton();
             this.RdDwnPagesonly = new System.Windows.Forms.RadioButton();
             this.RdDwnMatches = new System.Windows.Forms.RadioButton();
@@ -64,7 +65,8 @@
             this.btnRunExplorer = new System.Windows.Forms.Button();
             this.LblUrlPatches = new System.Windows.Forms.Label();
             this.LblDwnStat = new System.Windows.Forms.Label();
-            this.RDDwnAsRecList = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.NudParallelDownloads = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.NudRequsetSleep)).BeginInit();
             this.GrpConflicts.SuspendLayout();
             this.GrpCounter.SuspendLayout();
@@ -72,6 +74,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.NudCounterStart)).BeginInit();
             this.GrpInput.SuspendLayout();
             this.GrpDownload.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NudParallelDownloads)).BeginInit();
             this.SuspendLayout();
             // 
             // TxtDwnUrl
@@ -80,7 +83,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TxtDwnUrl.Location = new System.Drawing.Point(53, 17);
             this.TxtDwnUrl.Name = "TxtDwnUrl";
-            this.TxtDwnUrl.Size = new System.Drawing.Size(398, 20);
+            this.TxtDwnUrl.Size = new System.Drawing.Size(398, 22);
             this.TxtDwnUrl.TabIndex = 0;
             this.TxtDwnUrl.Text = "http://z.falsetrue.net/lol.php";
             // 
@@ -98,7 +101,7 @@
             this.LblSavePath.AutoSize = true;
             this.LblSavePath.Location = new System.Drawing.Point(17, 172);
             this.LblSavePath.Name = "LblSavePath";
-            this.LblSavePath.Size = new System.Drawing.Size(63, 13);
+            this.LblSavePath.Size = new System.Drawing.Size(72, 13);
             this.LblSavePath.TabIndex = 4;
             this.LblSavePath.Text = "Output path";
             // 
@@ -108,7 +111,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TxtSavePath.Location = new System.Drawing.Point(17, 198);
             this.TxtSavePath.Name = "TxtSavePath";
-            this.TxtSavePath.Size = new System.Drawing.Size(503, 20);
+            this.TxtSavePath.Size = new System.Drawing.Size(503, 22);
             this.TxtSavePath.TabIndex = 5;
             this.TxtSavePath.Text = "B:\\z.falsetrue.net";
             // 
@@ -128,9 +131,9 @@
             this.ChkRegexRelativePath.AutoSize = true;
             this.ChkRegexRelativePath.Checked = true;
             this.ChkRegexRelativePath.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkRegexRelativePath.Location = new System.Drawing.Point(20, 93);
+            this.ChkRegexRelativePath.Location = new System.Drawing.Point(20, 88);
             this.ChkRegexRelativePath.Name = "ChkRegexRelativePath";
-            this.ChkRegexRelativePath.Size = new System.Drawing.Size(133, 17);
+            this.ChkRegexRelativePath.Size = new System.Drawing.Size(142, 17);
             this.ChkRegexRelativePath.TabIndex = 7;
             this.ChkRegexRelativePath.Text = "Relative path for regex";
             this.ChkRegexRelativePath.UseVisualStyleBackColor = true;
@@ -138,23 +141,25 @@
             // ChkRequestSleep
             // 
             this.ChkRequestSleep.AutoSize = true;
-            this.ChkRequestSleep.Location = new System.Drawing.Point(20, 116);
+            this.ChkRequestSleep.Location = new System.Drawing.Point(282, 119);
             this.ChkRequestSleep.Name = "ChkRequestSleep";
-            this.ChkRequestSleep.Size = new System.Drawing.Size(159, 17);
+            this.ChkRequestSleep.Size = new System.Drawing.Size(169, 17);
             this.ChkRequestSleep.TabIndex = 8;
             this.ChkRequestSleep.Text = "Sleep between requests(ms)";
             this.ChkRequestSleep.UseVisualStyleBackColor = true;
+            this.ChkRequestSleep.CheckedChanged += new System.EventHandler(this.ChkRequestSleep_CheckedChanged);
             // 
             // NudRequsetSleep
             // 
-            this.NudRequsetSleep.Location = new System.Drawing.Point(214, 116);
+            this.NudRequsetSleep.Enabled = false;
+            this.NudRequsetSleep.Location = new System.Drawing.Point(322, 146);
             this.NudRequsetSleep.Maximum = new decimal(new int[] {
             9999999,
             0,
             0,
             0});
             this.NudRequsetSleep.Name = "NudRequsetSleep";
-            this.NudRequsetSleep.Size = new System.Drawing.Size(117, 20);
+            this.NudRequsetSleep.Size = new System.Drawing.Size(129, 22);
             this.NudRequsetSleep.TabIndex = 9;
             this.NudRequsetSleep.Value = new decimal(new int[] {
             500,
@@ -168,9 +173,9 @@
             this.GrpConflicts.Controls.Add(this.RdConflictSkip);
             this.GrpConflicts.Controls.Add(this.RdConflictAutorename);
             this.GrpConflicts.Controls.Add(this.RdConflictOverwrite);
-            this.GrpConflicts.Location = new System.Drawing.Point(361, 106);
+            this.GrpConflicts.Location = new System.Drawing.Point(483, 78);
             this.GrpConflicts.Name = "GrpConflicts";
-            this.GrpConflicts.Size = new System.Drawing.Size(306, 79);
+            this.GrpConflicts.Size = new System.Drawing.Size(184, 107);
             this.GrpConflicts.TabIndex = 10;
             this.GrpConflicts.TabStop = false;
             this.GrpConflicts.Text = "Name confilcts solving";
@@ -179,9 +184,9 @@
             // 
             this.RdConflictSkip.AutoSize = true;
             this.RdConflictSkip.Checked = true;
-            this.RdConflictSkip.Location = new System.Drawing.Point(187, 29);
+            this.RdConflictSkip.Location = new System.Drawing.Point(6, 56);
             this.RdConflictSkip.Name = "RdConflictSkip";
-            this.RdConflictSkip.Size = new System.Drawing.Size(83, 17);
+            this.RdConflictSkip.Size = new System.Drawing.Size(90, 17);
             this.RdConflictSkip.TabIndex = 2;
             this.RdConflictSkip.TabStop = true;
             this.RdConflictSkip.Text = "Skip loading";
@@ -190,9 +195,9 @@
             // RdConflictAutorename
             // 
             this.RdConflictAutorename.AutoSize = true;
-            this.RdConflictAutorename.Location = new System.Drawing.Point(99, 29);
+            this.RdConflictAutorename.Location = new System.Drawing.Point(6, 29);
             this.RdConflictAutorename.Name = "RdConflictAutorename";
-            this.RdConflictAutorename.Size = new System.Drawing.Size(82, 17);
+            this.RdConflictAutorename.Size = new System.Drawing.Size(88, 17);
             this.RdConflictAutorename.TabIndex = 1;
             this.RdConflictAutorename.TabStop = true;
             this.RdConflictAutorename.Text = "Autorename";
@@ -201,9 +206,9 @@
             // RdConflictOverwrite
             // 
             this.RdConflictOverwrite.AutoSize = true;
-            this.RdConflictOverwrite.Location = new System.Drawing.Point(23, 29);
+            this.RdConflictOverwrite.Location = new System.Drawing.Point(6, 83);
             this.RdConflictOverwrite.Name = "RdConflictOverwrite";
-            this.RdConflictOverwrite.Size = new System.Drawing.Size(70, 17);
+            this.RdConflictOverwrite.Size = new System.Drawing.Size(75, 17);
             this.RdConflictOverwrite.TabIndex = 0;
             this.RdConflictOverwrite.TabStop = true;
             this.RdConflictOverwrite.Text = "Overwrite";
@@ -234,9 +239,9 @@
             // 
             this.ChkPatchRghost.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChkPatchRghost.AutoSize = true;
-            this.ChkPatchRghost.Location = new System.Drawing.Point(483, 51);
+            this.ChkPatchRghost.Location = new System.Drawing.Point(481, 51);
             this.ChkPatchRghost.Name = "ChkPatchRghost";
-            this.ChkPatchRghost.Size = new System.Drawing.Size(62, 17);
+            this.ChkPatchRghost.Size = new System.Drawing.Size(64, 17);
             this.ChkPatchRghost.TabIndex = 2;
             this.ChkPatchRghost.Text = "RGhost";
             this.ChkPatchRghost.UseVisualStyleBackColor = true;
@@ -245,15 +250,16 @@
             // 
             this.ChkPatchVocaroo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChkPatchVocaroo.AutoSize = true;
-            this.ChkPatchVocaroo.Location = new System.Drawing.Point(483, 83);
+            this.ChkPatchVocaroo.Location = new System.Drawing.Point(574, 51);
             this.ChkPatchVocaroo.Name = "ChkPatchVocaroo";
-            this.ChkPatchVocaroo.Size = new System.Drawing.Size(66, 17);
+            this.ChkPatchVocaroo.Size = new System.Drawing.Size(69, 17);
             this.ChkPatchVocaroo.TabIndex = 1;
             this.ChkPatchVocaroo.Text = "Vocaroo";
             this.ChkPatchVocaroo.UseVisualStyleBackColor = true;
             // 
             // BwDwn
             // 
+            this.BwDwn.WorkerSupportsCancellation = true;
             this.BwDwn.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwdl_DoWork);
             // 
             // PrgDwn
@@ -283,6 +289,7 @@
             this.GrpCounter.Controls.Add(this.NudCounterStart);
             this.GrpCounter.Controls.Add(this.LblCounterEnd);
             this.GrpCounter.Controls.Add(this.LblCounterStart);
+            this.GrpCounter.Enabled = false;
             this.GrpCounter.Location = new System.Drawing.Point(115, 47);
             this.GrpCounter.Name = "GrpCounter";
             this.GrpCounter.Size = new System.Drawing.Size(336, 53);
@@ -298,7 +305,7 @@
             0,
             0});
             this.NudCounterEnd.Name = "NudCounterEnd";
-            this.NudCounterEnd.Size = new System.Drawing.Size(112, 20);
+            this.NudCounterEnd.Size = new System.Drawing.Size(112, 22);
             this.NudCounterEnd.TabIndex = 5;
             // 
             // NudCounterStart
@@ -310,7 +317,7 @@
             0,
             0});
             this.NudCounterStart.Name = "NudCounterStart";
-            this.NudCounterStart.Size = new System.Drawing.Size(112, 20);
+            this.NudCounterStart.Size = new System.Drawing.Size(112, 22);
             this.NudCounterStart.TabIndex = 4;
             // 
             // LblCounterEnd
@@ -318,7 +325,7 @@
             this.LblCounterEnd.AutoSize = true;
             this.LblCounterEnd.Location = new System.Drawing.Point(175, 23);
             this.LblCounterEnd.Name = "LblCounterEnd";
-            this.LblCounterEnd.Size = new System.Drawing.Size(26, 13);
+            this.LblCounterEnd.Size = new System.Drawing.Size(27, 13);
             this.LblCounterEnd.TabIndex = 2;
             this.LblCounterEnd.Text = "End";
             // 
@@ -327,7 +334,7 @@
             this.LblCounterStart.AutoSize = true;
             this.LblCounterStart.Location = new System.Drawing.Point(9, 23);
             this.LblCounterStart.Name = "LblCounterStart";
-            this.LblCounterStart.Size = new System.Drawing.Size(29, 13);
+            this.LblCounterStart.Size = new System.Drawing.Size(31, 13);
             this.LblCounterStart.TabIndex = 1;
             this.LblCounterStart.Text = "Start";
             // 
@@ -351,15 +358,24 @@
             this.GrpInput.TabStop = false;
             this.GrpInput.Text = "Input";
             // 
+            // RDDwnAsRecList
+            // 
+            this.RDDwnAsRecList.AutoSize = true;
+            this.RDDwnAsRecList.Location = new System.Drawing.Point(460, 111);
+            this.RDDwnAsRecList.Name = "RDDwnAsRecList";
+            this.RDDwnAsRecList.Size = new System.Drawing.Size(231, 17);
+            this.RDDwnAsRecList.TabIndex = 21;
+            this.RDDwnAsRecList.Text = "Download matches from all pages in list";
+            this.RDDwnAsRecList.UseVisualStyleBackColor = true;
+            // 
             // RdDwnAslist
             // 
             this.RdDwnAslist.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RdDwnAslist.AutoSize = true;
             this.RdDwnAslist.Location = new System.Drawing.Point(460, 87);
             this.RdDwnAslist.Name = "RdDwnAslist";
-            this.RdDwnAslist.Size = new System.Drawing.Size(138, 17);
+            this.RdDwnAslist.Size = new System.Drawing.Size(151, 17);
             this.RdDwnAslist.TabIndex = 20;
-            this.RdDwnAslist.TabStop = true;
             this.RdDwnAslist.Text = "Use file as download list";
             this.RdDwnAslist.UseVisualStyleBackColor = true;
             // 
@@ -369,9 +385,8 @@
             this.RdDwnPagesonly.AutoSize = true;
             this.RdDwnPagesonly.Location = new System.Drawing.Point(460, 64);
             this.RdDwnPagesonly.Name = "RdDwnPagesonly";
-            this.RdDwnPagesonly.Size = new System.Drawing.Size(194, 17);
+            this.RdDwnPagesonly.Size = new System.Drawing.Size(213, 17);
             this.RdDwnPagesonly.TabIndex = 19;
-            this.RdDwnPagesonly.TabStop = true;
             this.RdDwnPagesonly.Text = "Download pages using counter only";
             this.RdDwnPagesonly.UseVisualStyleBackColor = true;
             this.RdDwnPagesonly.CheckedChanged += new System.EventHandler(this.RdDwnPagesonly_CheckedChanged);
@@ -380,9 +395,10 @@
             // 
             this.RdDwnMatches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RdDwnMatches.AutoSize = true;
+            this.RdDwnMatches.Checked = true;
             this.RdDwnMatches.Location = new System.Drawing.Point(460, 40);
             this.RdDwnMatches.Name = "RdDwnMatches";
-            this.RdDwnMatches.Size = new System.Drawing.Size(166, 17);
+            this.RdDwnMatches.Size = new System.Drawing.Size(183, 17);
             this.RdDwnMatches.TabIndex = 18;
             this.RdDwnMatches.TabStop = true;
             this.RdDwnMatches.Text = "Download all matches from url";
@@ -394,7 +410,7 @@
             this.LblDwnAction.AutoSize = true;
             this.LblDwnAction.Location = new System.Drawing.Point(457, 20);
             this.LblDwnAction.Name = "LblDwnAction";
-            this.LblDwnAction.Size = new System.Drawing.Size(40, 13);
+            this.LblDwnAction.Size = new System.Drawing.Size(43, 13);
             this.LblDwnAction.TabIndex = 17;
             this.LblDwnAction.Text = "Action:";
             // 
@@ -402,9 +418,9 @@
             // 
             this.ChkCounterEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChkCounterEnabled.AutoSize = true;
-            this.ChkCounterEnabled.Location = new System.Drawing.Point(20, 57);
+            this.ChkCounterEnabled.Location = new System.Drawing.Point(16, 57);
             this.ChkCounterEnabled.Name = "ChkCounterEnabled";
-            this.ChkCounterEnabled.Size = new System.Drawing.Size(84, 43);
+            this.ChkCounterEnabled.Size = new System.Drawing.Size(88, 43);
             this.ChkCounterEnabled.TabIndex = 2;
             this.ChkCounterEnabled.Text = "Use counter\r\nreplaces {0}\r\nin url";
             this.ChkCounterEnabled.UseVisualStyleBackColor = true;
@@ -415,7 +431,7 @@
             this.LblDwnUrl.AutoSize = true;
             this.LblDwnUrl.Location = new System.Drawing.Point(14, 20);
             this.LblDwnUrl.Name = "LblDwnUrl";
-            this.LblDwnUrl.Size = new System.Drawing.Size(23, 13);
+            this.LblDwnUrl.Size = new System.Drawing.Size(25, 13);
             this.LblDwnUrl.TabIndex = 1;
             this.LblDwnUrl.Text = "Url:";
             // 
@@ -423,6 +439,8 @@
             // 
             this.GrpDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.GrpDownload.Controls.Add(this.NudParallelDownloads);
+            this.GrpDownload.Controls.Add(this.label1);
             this.GrpDownload.Controls.Add(this.btnRunExplorer);
             this.GrpDownload.Controls.Add(this.LblUrlPatches);
             this.GrpDownload.Controls.Add(this.ChkPatchRghost);
@@ -460,7 +478,7 @@
             this.LblUrlPatches.AutoSize = true;
             this.LblUrlPatches.Location = new System.Drawing.Point(480, 28);
             this.LblUrlPatches.Name = "LblUrlPatches";
-            this.LblUrlPatches.Size = new System.Drawing.Size(65, 13);
+            this.LblUrlPatches.Size = new System.Drawing.Size(67, 13);
             this.LblUrlPatches.TabIndex = 3;
             this.LblUrlPatches.Text = "Url Patches:";
             // 
@@ -475,16 +493,31 @@
             this.LblDwnStat.TabIndex = 19;
             this.LblDwnStat.Text = "Pending";
             // 
-            // RDDwnAsRecList
+            // label1
             // 
-            this.RDDwnAsRecList.AutoSize = true;
-            this.RDDwnAsRecList.Location = new System.Drawing.Point(460, 111);
-            this.RDDwnAsRecList.Name = "RDDwnAsRecList";
-            this.RDDwnAsRecList.Size = new System.Drawing.Size(210, 17);
-            this.RDDwnAsRecList.TabIndex = 21;
-            this.RDDwnAsRecList.TabStop = true;
-            this.RDDwnAsRecList.Text = "Download matches from all pages in list";
-            this.RDDwnAsRecList.UseVisualStyleBackColor = true;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 119);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(180, 13);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "Download thread count per sever";
+            // 
+            // NudParallelDownloads
+            // 
+            this.NudParallelDownloads.Location = new System.Drawing.Point(23, 145);
+            this.NudParallelDownloads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NudParallelDownloads.Name = "NudParallelDownloads";
+            this.NudParallelDownloads.Size = new System.Drawing.Size(177, 22);
+            this.NudParallelDownloads.TabIndex = 18;
+            this.NudParallelDownloads.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // FrmMain
             // 
@@ -512,6 +545,7 @@
             this.GrpInput.PerformLayout();
             this.GrpDownload.ResumeLayout(false);
             this.GrpDownload.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NudParallelDownloads)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -555,6 +589,8 @@
                 private System.Windows.Forms.Label LblUrlPatches;
                 private System.Windows.Forms.Label LblDwnStat;
                 private System.Windows.Forms.RadioButton RDDwnAsRecList;
+                private System.Windows.Forms.NumericUpDown NudParallelDownloads;
+                private System.Windows.Forms.Label label1;
     }
 }
 
