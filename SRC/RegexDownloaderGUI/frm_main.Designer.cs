@@ -62,11 +62,14 @@
             this.ChkCounterEnabled = new System.Windows.Forms.CheckBox();
             this.LblDwnUrl = new System.Windows.Forms.Label();
             this.GrpDownload = new System.Windows.Forms.GroupBox();
+            this.NudParallelDownloads = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.btnRunExplorer = new System.Windows.Forms.Button();
             this.LblUrlPatches = new System.Windows.Forms.Label();
             this.LblDwnStat = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.NudParallelDownloads = new System.Windows.Forms.NumericUpDown();
+            this.ChkCounterPadLeft = new System.Windows.Forms.CheckBox();
+            this.NudCounterPadLeft = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.NudRequsetSleep)).BeginInit();
             this.GrpConflicts.SuspendLayout();
             this.GrpCounter.SuspendLayout();
@@ -75,6 +78,7 @@
             this.GrpInput.SuspendLayout();
             this.GrpDownload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NudParallelDownloads)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudCounterPadLeft)).BeginInit();
             this.SuspendLayout();
             // 
             // TxtDwnUrl
@@ -99,7 +103,7 @@
             // LblSavePath
             // 
             this.LblSavePath.AutoSize = true;
-            this.LblSavePath.Location = new System.Drawing.Point(17, 172);
+            this.LblSavePath.Location = new System.Drawing.Point(20, 138);
             this.LblSavePath.Name = "LblSavePath";
             this.LblSavePath.Size = new System.Drawing.Size(72, 13);
             this.LblSavePath.TabIndex = 4;
@@ -109,18 +113,18 @@
             // 
             this.TxtSavePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtSavePath.Location = new System.Drawing.Point(17, 198);
+            this.TxtSavePath.Location = new System.Drawing.Point(23, 163);
             this.TxtSavePath.Name = "TxtSavePath";
-            this.TxtSavePath.Size = new System.Drawing.Size(503, 22);
+            this.TxtSavePath.Size = new System.Drawing.Size(325, 22);
             this.TxtSavePath.TabIndex = 5;
             this.TxtSavePath.Text = "B:\\z.falsetrue.net";
             // 
             // BtnDwnRun
             // 
             this.BtnDwnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnDwnRun.Location = new System.Drawing.Point(13, 410);
+            this.BtnDwnRun.Location = new System.Drawing.Point(494, 376);
             this.BtnDwnRun.Name = "BtnDwnRun";
-            this.BtnDwnRun.Size = new System.Drawing.Size(686, 72);
+            this.BtnDwnRun.Size = new System.Drawing.Size(205, 42);
             this.BtnDwnRun.TabIndex = 6;
             this.BtnDwnRun.Text = "GO";
             this.BtnDwnRun.UseVisualStyleBackColor = true;
@@ -131,7 +135,7 @@
             this.ChkRegexRelativePath.AutoSize = true;
             this.ChkRegexRelativePath.Checked = true;
             this.ChkRegexRelativePath.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkRegexRelativePath.Location = new System.Drawing.Point(20, 88);
+            this.ChkRegexRelativePath.Location = new System.Drawing.Point(71, 28);
             this.ChkRegexRelativePath.Name = "ChkRegexRelativePath";
             this.ChkRegexRelativePath.Size = new System.Drawing.Size(142, 17);
             this.ChkRegexRelativePath.TabIndex = 7;
@@ -141,7 +145,7 @@
             // ChkRequestSleep
             // 
             this.ChkRequestSleep.AutoSize = true;
-            this.ChkRequestSleep.Location = new System.Drawing.Point(282, 119);
+            this.ChkRequestSleep.Location = new System.Drawing.Point(282, 84);
             this.ChkRequestSleep.Name = "ChkRequestSleep";
             this.ChkRequestSleep.Size = new System.Drawing.Size(169, 17);
             this.ChkRequestSleep.TabIndex = 8;
@@ -152,14 +156,14 @@
             // NudRequsetSleep
             // 
             this.NudRequsetSleep.Enabled = false;
-            this.NudRequsetSleep.Location = new System.Drawing.Point(322, 146);
+            this.NudRequsetSleep.Location = new System.Drawing.Point(282, 107);
             this.NudRequsetSleep.Maximum = new decimal(new int[] {
             9999999,
             0,
             0,
             0});
             this.NudRequsetSleep.Name = "NudRequsetSleep";
-            this.NudRequsetSleep.Size = new System.Drawing.Size(129, 22);
+            this.NudRequsetSleep.Size = new System.Drawing.Size(195, 22);
             this.NudRequsetSleep.TabIndex = 9;
             this.NudRequsetSleep.Value = new decimal(new int[] {
             500,
@@ -221,8 +225,8 @@
             this.CmbRegex.FormattingEnabled = true;
             this.CmbRegex.Items.AddRange(new object[] {
             "//images\\.4chan\\.org\\/b\\/src\\/[0-9]+\\.(jpg|png|gif|jpeg)",
-            "http://([a-zA-Z0-9\\-\\.]+\\.)?(([[a-zA-Z0-9]+)\\.([a-zA-Z]))/([a-zA-Z0-9\\/\\.\\-_%\\?]+" +
-                ")?",
+            "http(s?):\\/\\/([a-zA-Z0-9\\-\\.]+)([a-zA-Z0-9\\-]+)\\.[a-zA-Z]+\\/([a-z0-9A-Z\\/\\?\\=\\,\\." +
+                "\\+\\-\\&_]*)",
             "\\/[a-z]+\\/src\\/[0-9]+\\.(jpg|png|gif)",
             "\\/src\\/(jpg|png|gif|jpeg|pdf|doc|rar|7z)\\/[0-9]+\\/[0-9]+\\.(jpg|png|gif|jpeg|pdf|d" +
                 "oc|rar|7z)",
@@ -231,7 +235,7 @@
             "http://anonymousdelivers.us/[0-9]+"});
             this.CmbRegex.Location = new System.Drawing.Point(20, 51);
             this.CmbRegex.Name = "CmbRegex";
-            this.CmbRegex.Size = new System.Drawing.Size(431, 21);
+            this.CmbRegex.Size = new System.Drawing.Size(457, 21);
             this.CmbRegex.TabIndex = 11;
             this.CmbRegex.Text = "\\/[a-z]+\\/src\\/[0-9]+\\.(jpg|png|gif)";
             // 
@@ -266,17 +270,17 @@
             // 
             this.PrgDwn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.PrgDwn.Enabled = false;
-            this.PrgDwn.Location = new System.Drawing.Point(12, 503);
+            this.PrgDwn.Location = new System.Drawing.Point(13, 380);
             this.PrgDwn.Name = "PrgDwn";
-            this.PrgDwn.Size = new System.Drawing.Size(687, 38);
+            this.PrgDwn.Size = new System.Drawing.Size(444, 38);
             this.PrgDwn.TabIndex = 13;
             // 
             // BtnBrowseOutput
             // 
             this.BtnBrowseOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnBrowseOutput.Location = new System.Drawing.Point(535, 196);
+            this.BtnBrowseOutput.Location = new System.Drawing.Point(364, 163);
             this.BtnBrowseOutput.Name = "BtnBrowseOutput";
-            this.BtnBrowseOutput.Size = new System.Drawing.Size(52, 23);
+            this.BtnBrowseOutput.Size = new System.Drawing.Size(113, 23);
             this.BtnBrowseOutput.TabIndex = 15;
             this.BtnBrowseOutput.Text = "...";
             this.BtnBrowseOutput.UseVisualStyleBackColor = true;
@@ -285,6 +289,9 @@
             // GrpCounter
             // 
             this.GrpCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.GrpCounter.Controls.Add(this.label2);
+            this.GrpCounter.Controls.Add(this.NudCounterPadLeft);
+            this.GrpCounter.Controls.Add(this.ChkCounterPadLeft);
             this.GrpCounter.Controls.Add(this.NudCounterEnd);
             this.GrpCounter.Controls.Add(this.NudCounterStart);
             this.GrpCounter.Controls.Add(this.LblCounterEnd);
@@ -292,7 +299,7 @@
             this.GrpCounter.Enabled = false;
             this.GrpCounter.Location = new System.Drawing.Point(115, 47);
             this.GrpCounter.Name = "GrpCounter";
-            this.GrpCounter.Size = new System.Drawing.Size(336, 53);
+            this.GrpCounter.Size = new System.Drawing.Size(336, 80);
             this.GrpCounter.TabIndex = 16;
             this.GrpCounter.TabStop = false;
             // 
@@ -456,19 +463,45 @@
             this.GrpDownload.Controls.Add(this.ChkRegexRelativePath);
             this.GrpDownload.Location = new System.Drawing.Point(13, 152);
             this.GrpDownload.Name = "GrpDownload";
-            this.GrpDownload.Size = new System.Drawing.Size(686, 241);
+            this.GrpDownload.Size = new System.Drawing.Size(686, 208);
             this.GrpDownload.TabIndex = 18;
             this.GrpDownload.TabStop = false;
             this.GrpDownload.Text = "Download";
             // 
+            // NudParallelDownloads
+            // 
+            this.NudParallelDownloads.Location = new System.Drawing.Point(23, 107);
+            this.NudParallelDownloads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NudParallelDownloads.Name = "NudParallelDownloads";
+            this.NudParallelDownloads.Size = new System.Drawing.Size(177, 22);
+            this.NudParallelDownloads.TabIndex = 18;
+            this.NudParallelDownloads.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 88);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(180, 13);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "Download thread count per sever";
+            // 
             // btnRunExplorer
             // 
             this.btnRunExplorer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRunExplorer.Location = new System.Drawing.Point(602, 196);
+            this.btnRunExplorer.Location = new System.Drawing.Point(364, 138);
             this.btnRunExplorer.Name = "btnRunExplorer";
-            this.btnRunExplorer.Size = new System.Drawing.Size(66, 23);
+            this.btnRunExplorer.Size = new System.Drawing.Size(113, 23);
             this.btnRunExplorer.TabIndex = 16;
-            this.btnRunExplorer.Text = "Open";
+            this.btnRunExplorer.Text = "Explorer here";
             this.btnRunExplorer.UseVisualStyleBackColor = true;
             this.btnRunExplorer.Click += new System.EventHandler(this.btnRunExplorer_Click);
             // 
@@ -487,43 +520,45 @@
             this.LblDwnStat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.LblDwnStat.AutoSize = true;
             this.LblDwnStat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblDwnStat.Location = new System.Drawing.Point(332, 514);
+            this.LblDwnStat.Location = new System.Drawing.Point(160, 391);
             this.LblDwnStat.Name = "LblDwnStat";
             this.LblDwnStat.Size = new System.Drawing.Size(53, 13);
             this.LblDwnStat.TabIndex = 19;
             this.LblDwnStat.Text = "Pending";
             // 
-            // label1
+            // ChkCounterPadLeft
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 119);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(180, 13);
-            this.label1.TabIndex = 17;
-            this.label1.Text = "Download thread count per sever";
+            this.ChkCounterPadLeft.AutoSize = true;
+            this.ChkCounterPadLeft.Location = new System.Drawing.Point(12, 57);
+            this.ChkCounterPadLeft.Name = "ChkCounterPadLeft";
+            this.ChkCounterPadLeft.Size = new System.Drawing.Size(178, 17);
+            this.ChkCounterPadLeft.TabIndex = 6;
+            this.ChkCounterPadLeft.Text = "Pad counter left with zeros to";
+            this.ChkCounterPadLeft.UseVisualStyleBackColor = true;
+            this.ChkCounterPadLeft.CheckedChanged += new System.EventHandler(this.ChkCounterPadLeft_CheckedChanged);
             // 
-            // NudParallelDownloads
+            // NudCounterPadLeft
             // 
-            this.NudParallelDownloads.Location = new System.Drawing.Point(23, 145);
-            this.NudParallelDownloads.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.NudParallelDownloads.Name = "NudParallelDownloads";
-            this.NudParallelDownloads.Size = new System.Drawing.Size(177, 22);
-            this.NudParallelDownloads.TabIndex = 18;
-            this.NudParallelDownloads.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.NudCounterPadLeft.Enabled = false;
+            this.NudCounterPadLeft.Location = new System.Drawing.Point(217, 52);
+            this.NudCounterPadLeft.Name = "NudCounterPadLeft";
+            this.NudCounterPadLeft.Size = new System.Drawing.Size(66, 22);
+            this.NudCounterPadLeft.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(294, 58);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "digits";
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(711, 565);
+            this.ClientSize = new System.Drawing.Size(711, 432);
             this.Controls.Add(this.LblDwnStat);
             this.Controls.Add(this.GrpDownload);
             this.Controls.Add(this.GrpInput);
@@ -546,6 +581,7 @@
             this.GrpDownload.ResumeLayout(false);
             this.GrpDownload.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NudParallelDownloads)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudCounterPadLeft)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -591,6 +627,9 @@
                 private System.Windows.Forms.RadioButton RDDwnAsRecList;
                 private System.Windows.Forms.NumericUpDown NudParallelDownloads;
                 private System.Windows.Forms.Label label1;
+                private System.Windows.Forms.Label label2;
+                private System.Windows.Forms.NumericUpDown NudCounterPadLeft;
+                private System.Windows.Forms.CheckBox ChkCounterPadLeft;
     }
 }
 

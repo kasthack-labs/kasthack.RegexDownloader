@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -31,7 +32,7 @@ namespace RegexDownloader {
                            settings.CounterStart,
                            settings.CounterEnd - settings.CounterStart + 1
                     )
-                    .Select( a => String.Format( b, a ) );
+                    .Select( a => String.Format( b, a.ToString(string.Format( "D{0}", settings.PadLeft?settings.PadLength.ToString():"" ) ) ) );
 
                 #endregion
 
@@ -49,11 +50,7 @@ namespace RegexDownloader {
                 Func<string, Regex, Regex, string> genPatch = ( a, r1, r2 ) => {
                     if ( !r1.IsMatch( a ) )
                         return a;
-                    return r2.Match(
-                                    AdvancedWebClient
-                                        .DownloadString( a )
-                        )
-                             .Value;
+                    return r2.Match(AWC.DownloadString( a ) ).Value;
                 };
                 Func<string, string> vocarooPatch = a => genPatch( a, VocarooLink, VocarooTarget );
                 Func<string, string> rghostPatch = a => genPatch( a, RghostLink, RghostTarget );
@@ -74,7 +71,7 @@ namespace RegexDownloader {
 
                     case DownloadType.List:
                         targetList =
-                            AdvancedWebClient
+                            AWC
                                 .DownloadString( settings.Url )
                                 .Split( "\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries )
                                 .SelectMany( cntr )
@@ -127,7 +124,7 @@ namespace RegexDownloader {
                     var tmpq = toParse
                         .Distinct()
                         .AsParallel()
-                        .Select( AdvancedWebClient.DownloadString )
+                        .Select( a=>AWC.DownloadString(a) )
                         .SelectMany( a => getMatches( a, settings.UrlRegex ) );
                     if ( settings.UseCounter )
                         tmpq = tmpq.SelectMany( cntr );
@@ -197,7 +194,7 @@ namespace RegexDownloader {
                                                               Path.GetExtension( output ) );
                                         break;
                                 }
-                            AdvancedWebClient.DownloadFile( s.ToString(), output );
+                            AWC.DownloadFile( s.ToString(), output );
                             reportInfo.Ready++;
                         }
                         catch {

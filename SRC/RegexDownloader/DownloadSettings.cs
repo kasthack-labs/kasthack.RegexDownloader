@@ -20,5 +20,7 @@ namespace RegexDownloader {
         public Regex UrlRegex = null;
         public string OutputDir;
         public string Url = "";
+        public bool PadLeft = false;
+        public int PadLength;
     }
 }

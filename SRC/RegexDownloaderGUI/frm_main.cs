@@ -11,9 +11,7 @@ namespace RegexDownloaderGUI {
         private bool _isDownloadRunning;
         public FrmMain() { this.InitializeComponent(); }
 
-        private void BtnGoClick(object sender,
-                                EventArgs e) {
-
+        private void BtnGoClick(object sender, EventArgs e) {
             if (!this._isDownloadRunning)
                 this.BwDwn.RunWorkerAsync();
             else {
@@ -35,7 +33,9 @@ namespace RegexDownloaderGUI {
         private void ChkCounterEnabled_CheckedChanged( object sender, EventArgs e ) {
             this.GrpCounter.Enabled = this.ChkCounterEnabled.Checked;
         }
-        private void RdDwnPagesonly_CheckedChanged( object sender, EventArgs e ) { this.CmbRegex.Enabled = this.RdDwnAslist.Checked; }
+        private void RdDwnPagesonly_CheckedChanged( object sender, EventArgs e ) { this.CmbRegex.Enabled = !this.RdDwnPagesonly.Checked;
+            ChkCounterEnabled.Checked |= this.RdDwnPagesonly.Checked;
+        }
 
         private void bwdl_DoWork( object sender, System.ComponentModel.DoWorkEventArgs e ) {
             DownloadSettings settings = null;
@@ -71,7 +71,9 @@ namespace RegexDownloaderGUI {
                     UseCounter = this.ChkCounterEnabled.Checked,
                     VocarooPatch = this.ChkPatchVocaroo.Checked,
                     ReportProgress = a => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) ),
-                    ThreadCount = Convert.ToInt32(this.NudParallelDownloads.Value)
+                    ThreadCount = Convert.ToInt32(this.NudParallelDownloads.Value),
+                    PadLeft = this.ChkCounterPadLeft.Checked,
+                    PadLength = Convert.ToInt32( this.NudCounterPadLeft.Value )
                 };
                 if ( this.RdConflictAutorename.Checked )
                     settings.ConflictAction = ConflictAction.Autorename;
@@ -117,6 +119,10 @@ namespace RegexDownloaderGUI {
 
         private void ChkRequestSleep_CheckedChanged( object sender, EventArgs e ) {
             this.NudRequsetSleep.Enabled = this.ChkRequestSleep.Checked;
+        }
+
+        private void ChkCounterPadLeft_CheckedChanged( object sender, EventArgs e ) {
+            NudCounterPadLeft.Enabled = ChkCounterPadLeft.Checked;
         }
 
     }
