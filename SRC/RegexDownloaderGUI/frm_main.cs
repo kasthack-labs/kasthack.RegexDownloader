@@ -39,6 +39,7 @@ namespace RegexDownloaderGUI {
 
         private void bwdl_DoWork( object sender, System.ComponentModel.DoWorkEventArgs e ) {
             DownloadSettings settings = null;
+            bool ok = true;
             this.Invoke( (Action) ( () => {
                 this._isDownloadRunning = true;
                 this.GrpDownload.Enabled = true;
@@ -47,60 +48,64 @@ namespace RegexDownloaderGUI {
                 Application.DoEvents();
             } ));
             this.Invoke( (Action) ( () => {
-                settings = new DownloadSettings {
-                    AutoRename = this.RdConflictAutorename.Checked,
-                    RenameOnConflictFunc =
-                        a=>
+                try {
+                    settings = new DownloadSettings {
+                        AutoRename = this.RdConflictAutorename.Checked,
+                        RenameOnConflictFunc =
+                            a =>
                             Path.Combine(
-                                Path.GetDirectoryName(a),
-                                Path.GetFileNameWithoutExtension(a)+
-                                    "."+
-                                    this._rnd.Next()+
-                                    Path.GetExtension(a)
-                            ),
-                    CancelFunc=()=>e.Cancel,
-                    Url = this.TxtDwnUrl.Text,
-                    CounterEnd = Convert.ToInt32( this.NudCounterEnd.Value ),
-                    CounterStart = Convert.ToInt32( this.NudCounterStart.Value ),
-                    OutputDir = this.TxtSavePath.Text,
-                    Relative = this.ChkRegexRelativePath.Checked,
-                    RghostPatch = this.ChkPatchRghost.Checked,
-                    SleepBetween = this.ChkRequestSleep.Checked,
-                    SleepTime = Convert.ToInt32( this.NudRequsetSleep.Value ),
-                    UrlRegex = new Regex( this.CmbRegex.Text ),
-                    UseCounter = this.ChkCounterEnabled.Checked,
-                    VocarooPatch = this.ChkPatchVocaroo.Checked,
-                    ReportProgress = a => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) ),
-                    ThreadCount = Convert.ToInt32(this.NudParallelDownloads.Value),
-                    PadLeft = this.ChkCounterPadLeft.Checked,
-                    PadLength = Convert.ToInt32( this.NudCounterPadLeft.Value )
-                };
-                if ( this.RdConflictAutorename.Checked )
-                    settings.ConflictAction = ConflictAction.Autorename;
-                else if ( this.RdConflictOverwrite.Checked )
-                    settings.ConflictAction = ConflictAction.Overwrite;
-                else if ( this.RdConflictSkip.Checked )
-                    settings.ConflictAction = ConflictAction.Skip;
-                else settings.ConflictAction = ConflictAction.Unknown;
+                                Path.GetDirectoryName( a ),
+                                Path.GetFileNameWithoutExtension( a ) + "." + this._rnd.Next() + Path.GetExtension( a ) ),
+                        CancelFunc = () => e.Cancel,
+                        Url = this.TxtDwnUrl.Text,
+                        CounterEnd = Convert.ToInt32( this.NudCounterEnd.Value ),
+                        CounterStart = Convert.ToInt32( this.NudCounterStart.Value ),
+                        OutputDir = this.TxtSavePath.Text,
+                        Relative = this.ChkRegexRelativePath.Checked,
+                        RghostPatch = this.ChkPatchRghost.Checked,
+                        SleepBetween = this.ChkRequestSleep.Checked,
+                        SleepTime = Convert.ToInt32( this.NudRequsetSleep.Value ),
+                        UrlRegex = new Regex( this.CmbRegex.Text ),
+                        UseCounter = this.ChkCounterEnabled.Checked,
+                        VocarooPatch = this.ChkPatchVocaroo.Checked,
+                        ReportProgress = a => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) ),
+                        ThreadCount = Convert.ToInt32( this.NudParallelDownloads.Value ),
+                        PadLeft = this.ChkCounterPadLeft.Checked,
+                        PadLength = Convert.ToInt32( this.NudCounterPadLeft.Value )
+                    };
+                    if ( this.RdConflictAutorename.Checked )
+                        settings.ConflictAction = ConflictAction.Autorename;
+                    else if ( this.RdConflictOverwrite.Checked )
+                        settings.ConflictAction = ConflictAction.Overwrite;
+                    else if ( this.RdConflictSkip.Checked )
+                        settings.ConflictAction = ConflictAction.Skip;
+                    else settings.ConflictAction = ConflictAction.Unknown;
 
-                if ( this.RdDwnAslist.Checked )
-                    settings.DwnType = DownloadType.List;
-                else if ( this.RdDwnMatches.Checked )
-                    settings.DwnType = DownloadType.Mathces;
-                else if ( this.RdDwnPagesonly.Checked )
-                    settings.DwnType = DownloadType.CounterOnly;
-                else if ( this.RDDwnAsRecList.Checked )
-                    settings.DwnType = DownloadType.MatchesList;
-                else settings.DwnType = DownloadType.Unknown;
+                    if ( this.RdDwnAslist.Checked )
+                        settings.DwnType = DownloadType.List;
+                    else if ( this.RdDwnMatches.Checked )
+                        settings.DwnType = DownloadType.Mathces;
+                    else if ( this.RdDwnPagesonly.Checked )
+                        settings.DwnType = DownloadType.CounterOnly;
+                    else if ( this.RDDwnAsRecList.Checked )
+                        settings.DwnType = DownloadType.MatchesList;
+                    else settings.DwnType = DownloadType.Unknown;
+                }
+                catch (ArgumentException ex) {
+                    MessageBox.Show( "Bad regex: " + ex.Message,"Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                    ok = false;
+                }
             } ) );
-            Downloader.Download( settings );
+            if (ok)
+                Downloader.Download( settings );
             this.Invoke( (Action) ( () => {
                 this._isDownloadRunning = false;
                 this.GrpDownload.Enabled = true;
                 this.GrpInput.Enabled = true;
                 this.PrgDwn.Value = 100;
                 this.BtnDwnRun.Text = @"GO";
-                MessageBox.Show( @"Finished" );
+                if (ok)
+                    MessageBox.Show( @"Finished" );
             } ) );
         }
 
