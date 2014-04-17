@@ -71,7 +71,9 @@ namespace RegexDownloaderGUI {
                         ReportProgress = a => this.Invoke( (Action) ( () => this.ReportProgress( a ) ) ),
                         ThreadCount = Convert.ToInt32( this.NudParallelDownloads.Value ),
                         PadLeft = this.ChkCounterPadLeft.Checked,
-                        PadLength = Convert.ToInt32( this.NudCounterPadLeft.Value )
+                        PadLength = Convert.ToInt32( this.NudCounterPadLeft.Value ),
+                        ZeroChanPatch = chkZerochanPatch.Checked,
+                        CreateDir = chkCreateDir.Checked
                     };
                     if ( this.RdConflictAutorename.Checked )
                         settings.ConflictAction = ConflictAction.Autorename;

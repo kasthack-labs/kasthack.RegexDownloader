@@ -49,6 +49,9 @@
             this.BtnBrowseOutput = new System.Windows.Forms.Button();
             this.FbdBrs = new System.Windows.Forms.FolderBrowserDialog();
             this.GrpCounter = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.NudCounterPadLeft = new System.Windows.Forms.NumericUpDown();
+            this.ChkCounterPadLeft = new System.Windows.Forms.CheckBox();
             this.NudCounterEnd = new System.Windows.Forms.NumericUpDown();
             this.NudCounterStart = new System.Windows.Forms.NumericUpDown();
             this.LblCounterEnd = new System.Windows.Forms.Label();
@@ -67,18 +70,17 @@
             this.btnRunExplorer = new System.Windows.Forms.Button();
             this.LblUrlPatches = new System.Windows.Forms.Label();
             this.LblDwnStat = new System.Windows.Forms.Label();
-            this.ChkCounterPadLeft = new System.Windows.Forms.CheckBox();
-            this.NudCounterPadLeft = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
+            this.chkZerochanPatch = new System.Windows.Forms.CheckBox();
+            this.chkCreateDir = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NudRequsetSleep)).BeginInit();
             this.GrpConflicts.SuspendLayout();
             this.GrpCounter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NudCounterPadLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudCounterEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudCounterStart)).BeginInit();
             this.GrpInput.SuspendLayout();
             this.GrpDownload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NudParallelDownloads)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NudCounterPadLeft)).BeginInit();
             this.SuspendLayout();
             // 
             // TxtDwnUrl
@@ -89,7 +91,6 @@
             this.TxtDwnUrl.Name = "TxtDwnUrl";
             this.TxtDwnUrl.Size = new System.Drawing.Size(398, 22);
             this.TxtDwnUrl.TabIndex = 0;
-            this.TxtDwnUrl.Text = "http://z.falsetrue.net/lol.php";
             // 
             // LblRegex
             // 
@@ -117,7 +118,6 @@
             this.TxtSavePath.Name = "TxtSavePath";
             this.TxtSavePath.Size = new System.Drawing.Size(325, 22);
             this.TxtSavePath.TabIndex = 5;
-            this.TxtSavePath.Text = "B:\\z.falsetrue.net";
             // 
             // BtnDwnRun
             // 
@@ -232,7 +232,8 @@
                 "oc|rar|7z)",
             "http://rghost.ru/[0-9]+",
             "http://vocaroo.com/i/[a-zA-Z0-9]+",
-            "http://anonymousdelivers.us/[0-9]+"});
+            "http://anonymousdelivers.us/[0-9]+",
+            "/[0-9]{6,12}"});
             this.CmbRegex.Location = new System.Drawing.Point(20, 51);
             this.CmbRegex.Name = "CmbRegex";
             this.CmbRegex.Size = new System.Drawing.Size(457, 21);
@@ -243,6 +244,8 @@
             // 
             this.ChkPatchRghost.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChkPatchRghost.AutoSize = true;
+            this.ChkPatchRghost.Checked = true;
+            this.ChkPatchRghost.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ChkPatchRghost.Location = new System.Drawing.Point(481, 51);
             this.ChkPatchRghost.Name = "ChkPatchRghost";
             this.ChkPatchRghost.Size = new System.Drawing.Size(64, 17);
@@ -254,6 +257,8 @@
             // 
             this.ChkPatchVocaroo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChkPatchVocaroo.AutoSize = true;
+            this.ChkPatchVocaroo.Checked = true;
+            this.ChkPatchVocaroo.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ChkPatchVocaroo.Location = new System.Drawing.Point(574, 51);
             this.ChkPatchVocaroo.Name = "ChkPatchVocaroo";
             this.ChkPatchVocaroo.Size = new System.Drawing.Size(69, 17);
@@ -302,6 +307,34 @@
             this.GrpCounter.Size = new System.Drawing.Size(336, 80);
             this.GrpCounter.TabIndex = 16;
             this.GrpCounter.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(294, 58);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "digits";
+            // 
+            // NudCounterPadLeft
+            // 
+            this.NudCounterPadLeft.Enabled = false;
+            this.NudCounterPadLeft.Location = new System.Drawing.Point(217, 52);
+            this.NudCounterPadLeft.Name = "NudCounterPadLeft";
+            this.NudCounterPadLeft.Size = new System.Drawing.Size(66, 22);
+            this.NudCounterPadLeft.TabIndex = 7;
+            // 
+            // ChkCounterPadLeft
+            // 
+            this.ChkCounterPadLeft.AutoSize = true;
+            this.ChkCounterPadLeft.Location = new System.Drawing.Point(12, 57);
+            this.ChkCounterPadLeft.Name = "ChkCounterPadLeft";
+            this.ChkCounterPadLeft.Size = new System.Drawing.Size(178, 17);
+            this.ChkCounterPadLeft.TabIndex = 6;
+            this.ChkCounterPadLeft.Text = "Pad counter left with zeros to";
+            this.ChkCounterPadLeft.UseVisualStyleBackColor = true;
+            this.ChkCounterPadLeft.CheckedChanged += new System.EventHandler(this.ChkCounterPadLeft_CheckedChanged);
             // 
             // NudCounterEnd
             // 
@@ -429,7 +462,7 @@
             this.ChkCounterEnabled.Name = "ChkCounterEnabled";
             this.ChkCounterEnabled.Size = new System.Drawing.Size(88, 43);
             this.ChkCounterEnabled.TabIndex = 2;
-            this.ChkCounterEnabled.Text = "Use counter\r\nreplaces {0}\r\nin url";
+            this.ChkCounterEnabled.Text = "Use counter\r\n(replaces {0}\r\nin url)";
             this.ChkCounterEnabled.UseVisualStyleBackColor = true;
             this.ChkCounterEnabled.CheckedChanged += new System.EventHandler(this.ChkCounterEnabled_CheckedChanged);
             // 
@@ -446,6 +479,8 @@
             // 
             this.GrpDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.GrpDownload.Controls.Add(this.chkCreateDir);
+            this.GrpDownload.Controls.Add(this.chkZerochanPatch);
             this.GrpDownload.Controls.Add(this.NudParallelDownloads);
             this.GrpDownload.Controls.Add(this.label1);
             this.GrpDownload.Controls.Add(this.btnRunExplorer);
@@ -526,33 +561,29 @@
             this.LblDwnStat.TabIndex = 19;
             this.LblDwnStat.Text = "Pending";
             // 
-            // ChkCounterPadLeft
+            // chkZerochanPatch
             // 
-            this.ChkCounterPadLeft.AutoSize = true;
-            this.ChkCounterPadLeft.Location = new System.Drawing.Point(12, 57);
-            this.ChkCounterPadLeft.Name = "ChkCounterPadLeft";
-            this.ChkCounterPadLeft.Size = new System.Drawing.Size(178, 17);
-            this.ChkCounterPadLeft.TabIndex = 6;
-            this.ChkCounterPadLeft.Text = "Pad counter left with zeros to";
-            this.ChkCounterPadLeft.UseVisualStyleBackColor = true;
-            this.ChkCounterPadLeft.CheckedChanged += new System.EventHandler(this.ChkCounterPadLeft_CheckedChanged);
+            this.chkZerochanPatch.AutoSize = true;
+            this.chkZerochanPatch.Checked = true;
+            this.chkZerochanPatch.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkZerochanPatch.Location = new System.Drawing.Point(574, 22);
+            this.chkZerochanPatch.Name = "chkZerochanPatch";
+            this.chkZerochanPatch.Size = new System.Drawing.Size(74, 17);
+            this.chkZerochanPatch.TabIndex = 19;
+            this.chkZerochanPatch.Text = "Zerochan";
+            this.chkZerochanPatch.UseVisualStyleBackColor = true;
             // 
-            // NudCounterPadLeft
+            // chkCreateDir
             // 
-            this.NudCounterPadLeft.Enabled = false;
-            this.NudCounterPadLeft.Location = new System.Drawing.Point(217, 52);
-            this.NudCounterPadLeft.Name = "NudCounterPadLeft";
-            this.NudCounterPadLeft.Size = new System.Drawing.Size(66, 22);
-            this.NudCounterPadLeft.TabIndex = 7;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(294, 58);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "digits";
+            this.chkCreateDir.AutoSize = true;
+            this.chkCreateDir.Checked = true;
+            this.chkCreateDir.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCreateDir.Location = new System.Drawing.Point(127, 137);
+            this.chkCreateDir.Name = "chkCreateDir";
+            this.chkCreateDir.Size = new System.Drawing.Size(121, 17);
+            this.chkCreateDir.TabIndex = 20;
+            this.chkCreateDir.Text = "Create if not exists";
+            this.chkCreateDir.UseVisualStyleBackColor = true;
             // 
             // FrmMain
             // 
@@ -574,6 +605,7 @@
             this.GrpConflicts.PerformLayout();
             this.GrpCounter.ResumeLayout(false);
             this.GrpCounter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NudCounterPadLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudCounterEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudCounterStart)).EndInit();
             this.GrpInput.ResumeLayout(false);
@@ -581,7 +613,6 @@
             this.GrpDownload.ResumeLayout(false);
             this.GrpDownload.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NudParallelDownloads)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NudCounterPadLeft)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -630,6 +661,8 @@
                 private System.Windows.Forms.Label label2;
                 private System.Windows.Forms.NumericUpDown NudCounterPadLeft;
                 private System.Windows.Forms.CheckBox ChkCounterPadLeft;
+                private System.Windows.Forms.CheckBox chkZerochanPatch;
+                private System.Windows.Forms.CheckBox chkCreateDir;
     }
 }
 

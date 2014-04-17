@@ -7,6 +7,7 @@ namespace RegexDownloader {
         public bool AutoRename = false;
         public bool Relative = false;
         public bool RghostPatch = false;
+        public bool ZeroChanPatch = false;
         public bool SleepBetween = false;
         public bool UseCounter = false;
         public bool VocarooPatch = false;
@@ -22,5 +23,6 @@ namespace RegexDownloader {
         public string Url = "";
         public bool PadLeft = false;
         public int PadLength;
+        public bool CreateDir = true;
     }
 }

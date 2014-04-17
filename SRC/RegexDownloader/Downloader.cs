@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,15 +10,20 @@ using EpicMorg.Net;
 
 namespace RegexDownloader {
     public static class Downloader {
-        private static readonly Regex RghostLink = new Regex( "http://rghost.ru/[0-9]+" );
-        private static readonly Regex VocarooLink = new Regex( "http://vocaroo.com/i/[a-zA-Z0-9]+" );
-        private static readonly Regex VocarooTarget = new Regex( "/media_command.php?media=[a-zA-Z0-9]+&command=download_mp3" );
+        private static readonly Regex RghostLink = new Regex( @"http(s)?://(www\.)?rghost\.ru/[0-9]+" );
+        private static readonly Regex VocarooLink = new Regex( @"http(s)?://(www\.)?vocaroo\.com/i/[a-zA-Z0-9]+" );
+        private static readonly Regex ZeroChanLink = new Regex( @"http(s)?://(www\.)?zerochan\.net/[0-9]+" );
+        private static readonly Regex ZeroChanTarget = new Regex( @"http(s)?://static\.zerochan\.net/[A-Za-z0-9\.]+\.full\.[0-9]+\.(jpg|png|gif)" );
+        private static readonly Regex VocarooTarget = new Regex( @"/media_command.php?media=[a-zA-Z0-9]+&command=download_mp3" );
         private static readonly Regex RghostTarget = new Regex( @"http://rghost.ru/download/[0-9]+/[0-9a-z]+/[A-Za-z0-9\.%]+" );
 
         public static void Download( DownloadSettings settings ) {
             try {
+                var THR = 6;
                 IEnumerable<string> pagesToParse = null;
                 var targetList = new List<string>();
+                if ( settings.CreateDir && !Directory.Exists( settings.OutputDir ) )
+                    Directory.CreateDirectory( settings.OutputDir );
                 if ( settings.UseCounter && settings.CounterEnd < settings.CounterStart )
                     throw new ArgumentException( @"Counter start must be <= counter end", "settings" );
 
@@ -32,17 +36,15 @@ namespace RegexDownloader {
                            settings.CounterStart,
                            settings.CounterEnd - settings.CounterStart + 1
                     )
-                    .Select( a => String.Format( b, a.ToString(string.Format( "D{0}", settings.PadLeft?settings.PadLength.ToString():"" ) ) ) );
+                    .Select( a => String.Format( b, a.ToString( string.Format( "D{0}", settings.PadLeft ? settings.PadLength.ToString() : "" ) ) ) );
 
                 #endregion
 
                 #region Url Matches
 
-                Func<string, Regex, IEnumerable<string>> getMatches = ( a, b ) =>
-                    b
-                        .Matches( a )
-                        .OfType<Match>()
-                        .Select( c => c.ToString() );
+                Func<string, Regex, IEnumerable<string>> getMatches = ( a, b ) => b.Matches( a )
+                                                                    .OfType<Match>()
+                                                                    .Select( c => c.ToString() );
 
                 #endregion
 
@@ -50,10 +52,11 @@ namespace RegexDownloader {
                 Func<string, Regex, Regex, string> genPatch = ( a, r1, r2 ) => {
                     if ( !r1.IsMatch( a ) )
                         return a;
-                    return r2.Match(AWC.DownloadString( a ) ).Value;
+                    return r2.Match( AWC.DownloadString( a ) ).Value;
                 };
                 Func<string, string> vocarooPatch = a => genPatch( a, VocarooLink, VocarooTarget );
                 Func<string, string> rghostPatch = a => genPatch( a, RghostLink, RghostTarget );
+                Func<string, string> zerochanPatch = a => genPatch( a, ZeroChanLink, ZeroChanTarget );
                 #endregion
 
                 if ( settings.CancelFunc() ) return;
@@ -124,30 +127,46 @@ namespace RegexDownloader {
                     var tmpq = toParse
                         .Distinct()
                         .AsParallel()
-                        .Select( a=>AWC.DownloadString(a) )
+                        .Select( a => AWC.DownloadString( a ) )
                         .SelectMany( a => getMatches( a, settings.UrlRegex ) );
                     if ( settings.UseCounter )
                         tmpq = tmpq.SelectMany( cntr );
                     targetList = targetList
                         .Concat( tmpq )
                         .Distinct()
+                        .Select( a => {
+                            try {
+                                return ( settings.Relative ? new Uri( baseuri, a ) : new Uri( a ) ).ToString();
+                            }
+                            catch { return null; }
+                        } )
+                        .Where( a => a != null )
                         .ToList()
                         ;
                 }
                 if ( settings.CancelFunc() ) return;
-                
+
                 #endregion
                 #region Patches
                 if ( settings.VocarooPatch )
                     targetList = targetList
                         .AsParallel()
+                        .WithDegreeOfParallelism( THR )
                         .Select( vocarooPatch )
                         .Distinct()
                         .ToList();
                 if ( settings.RghostPatch )
                     targetList = targetList
                         .AsParallel()
+                        .WithDegreeOfParallelism( THR )
                         .Select( rghostPatch )
+                        .Distinct()
+                        .ToList();
+                if ( settings.ZeroChanPatch )
+                    targetList = targetList
+                        .AsParallel()
+                        .WithDegreeOfParallelism( THR )
+                        .Select( zerochanPatch )
                         .Distinct()
                         .ToList();
                 #endregion
@@ -155,26 +174,14 @@ namespace RegexDownloader {
 
                 #region Optimize target for multithread download
                 var targetList2 = targetList
-                    .Select( a => {
-                        try {
-                            return settings.Relative ? new Uri( baseuri, a ) : new Uri( a );
-                        }
-                        catch {
-                            return null;
-                        }
-                    } )
-                    .Where( a => !( a == null ) )
-                    .GroupBy(
-                             a => a.Host
-                    )
-                    .Select(
-                        a=>a.ToArray()
-                    )
+                    .Select( a=>new Uri( a ) )
+                    .GroupBy( a => a.Host )
+                    .Select( a => a.ToArray() )
                     .ToArray()
                     ;
                 if ( settings.CancelFunc() ) return;
                 #endregion
-                
+
                 Parallel.ForEach( targetList2, new ParallelOptions { MaxDegreeOfParallelism = 16 }, uris => {
                     if ( settings.CancelFunc() ) return;
                     Parallel.ForEach( uris, new ParallelOptions { MaxDegreeOfParallelism = settings.SleepBetween ? 1 : settings.ThreadCount }, s => {
@@ -189,8 +196,8 @@ namespace RegexDownloader {
                                     case ConflictAction.Autorename:
                                         output = Path.Combine(
                                                               Path.GetDirectoryName( output ),
-                                                              settings.RenameOnConflictFunc(Path.GetFileNameWithoutExtension( output ))+
-                                                              ////this._rnd.Next( int.MaxValue ) +
+                                                              settings.RenameOnConflictFunc( Path.GetFileNameWithoutExtension( output ) ) +
+                                            ////this._rnd.Next( int.MaxValue ) +
                                                               Path.GetExtension( output ) );
                                         break;
                                 }
